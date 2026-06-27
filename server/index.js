@@ -81,12 +81,20 @@ async function connectMongo() {
 
 let usingMongo = false
 
+// Serve static assets from frontend build directory
+const distPath = path.join(__dirname, '../dist')
+app.use(express.static(distPath))
+
 app.get('/health', (_req, res) => res.json({ status: 'ok' }))
 
 app.get('/api/projects', async (_req, res) => {
-	if (usingMongo) {
-		const allProjects = await ProjectModel.find().lean()
-		return res.json(allProjects)
+	try {
+		if (usingMongo) {
+			const allProjects = await ProjectModel.find().lean()
+			return res.json(allProjects)
+		}
+	} catch (error) {
+		console.error('Failed to fetch from MongoDB, falling back to local JSON:', error.message)
 	}
 	res.json(projects)
 })
@@ -95,9 +103,13 @@ app.post('/api/projects', async (req, res) => {
 	const payload = req.body || {}
 	const project = buildProject(payload)
 
-	if (usingMongo) {
-		const created = await ProjectModel.create(project)
-		return res.status(201).json(created)
+	try {
+		if (usingMongo) {
+			const created = await ProjectModel.create(project)
+			return res.status(201).json(created)
+		}
+	} catch (error) {
+		console.error('Failed to create in MongoDB, falling back to local JSON:', error.message)
 	}
 
 	const nextProjects = [project, ...projects]
@@ -106,11 +118,15 @@ app.post('/api/projects', async (req, res) => {
 })
 
 app.get('/api/projects/:id', async (req, res) => {
-	if (usingMongo) {
-		const project = await ProjectModel.findById(req.params.id).lean()
-		return project
-			? res.json(project)
-			: res.status(404).json({ message: 'Not found' })
+	try {
+		if (usingMongo) {
+			const project = await ProjectModel.findById(req.params.id).lean()
+			return project
+				? res.json(project)
+				: res.status(404).json({ message: 'Not found' })
+		}
+	} catch (error) {
+		console.error('Failed to get from MongoDB, falling back to local JSON:', error.message)
 	}
 
 	const project = projects.find(item => item.id === req.params.id)
@@ -120,15 +136,19 @@ app.get('/api/projects/:id', async (req, res) => {
 })
 
 app.put('/api/projects/:id', async (req, res) => {
-	if (usingMongo) {
-		const updated = await ProjectModel.findByIdAndUpdate(
-			req.params.id,
-			req.body,
-			{ new: true, runValidators: true },
-		)
-		return updated
-			? res.json(updated)
-			: res.status(404).json({ message: 'Not found' })
+	try {
+		if (usingMongo) {
+			const updated = await ProjectModel.findByIdAndUpdate(
+				req.params.id,
+				req.body,
+				{ new: true, runValidators: true },
+			)
+			return updated
+				? res.json(updated)
+				: res.status(404).json({ message: 'Not found' })
+		}
+	} catch (error) {
+		console.error('Failed to update in MongoDB, falling back to local JSON:', error.message)
 	}
 
 	const index = projects.findIndex(item => item.id === req.params.id)
@@ -141,11 +161,15 @@ app.put('/api/projects/:id', async (req, res) => {
 })
 
 app.delete('/api/projects/:id', async (req, res) => {
-	if (usingMongo) {
-		const deleted = await ProjectModel.findByIdAndDelete(req.params.id)
-		return deleted
-			? res.json({ deleted: true })
-			: res.status(404).json({ message: 'Not found' })
+	try {
+		if (usingMongo) {
+			const deleted = await ProjectModel.findByIdAndDelete(req.params.id)
+			return deleted
+				? res.json({ deleted: true })
+				: res.status(404).json({ message: 'Not found' })
+		}
+	} catch (error) {
+		console.error('Failed to delete in MongoDB, falling back to local JSON:', error.message)
 	}
 
 	const nextProjects = projects.filter(item => item.id !== req.params.id)
@@ -154,6 +178,20 @@ app.delete('/api/projects/:id', async (req, res) => {
 	saveProjects(nextProjects)
 	res.json({ deleted: true })
 })
+
+// Handle client-side routing, return index.html for all non-API paths
+app.get(/.*/, (req, res, next) => {
+	if (req.path.startsWith('/api')) {
+		return next()
+	}
+	const indexFile = path.join(distPath, 'index.html')
+	if (fs.existsSync(indexFile)) {
+		res.sendFile(indexFile)
+	} else {
+		res.status(404).send('Frontend build not found. Run npm run build first.')
+	}
+})
+
 
 app.listen(PORT, async () => {
 	usingMongo = await connectMongo()
