@@ -52,6 +52,7 @@ function buildProject(payload) {
 
 const projectSchema = new mongoose.Schema(
 	{
+		id: { type: String, required: true, unique: true },
 		title: String,
 		description: String,
 		tags: [String],
@@ -91,7 +92,11 @@ app.get('/api/projects', async (_req, res) => {
 	try {
 		if (usingMongo) {
 			const allProjects = await ProjectModel.find().lean()
-			return res.json(allProjects)
+			const mappedProjects = allProjects.map(p => ({
+				...p,
+				id: p.id || p._id.toString(),
+			}))
+			return res.json(mappedProjects)
 		}
 	} catch (error) {
 		console.error('Failed to fetch from MongoDB, falling back to local JSON:', error.message)
@@ -106,7 +111,11 @@ app.post('/api/projects', async (req, res) => {
 	try {
 		if (usingMongo) {
 			const created = await ProjectModel.create(project)
-			return res.status(201).json(created)
+			const doc = created.toObject ? created.toObject() : created
+			return res.status(201).json({
+				...doc,
+				id: doc.id || doc._id.toString(),
+			})
 		}
 	} catch (error) {
 		console.error('Failed to create in MongoDB, falling back to local JSON:', error.message)
@@ -120,10 +129,17 @@ app.post('/api/projects', async (req, res) => {
 app.get('/api/projects/:id', async (req, res) => {
 	try {
 		if (usingMongo) {
-			const project = await ProjectModel.findById(req.params.id).lean()
-			return project
-				? res.json(project)
-				: res.status(404).json({ message: 'Not found' })
+			let project = await ProjectModel.findOne({ id: req.params.id }).lean()
+			if (!project && mongoose.Types.ObjectId.isValid(req.params.id)) {
+				project = await ProjectModel.findById(req.params.id).lean()
+			}
+			if (project) {
+				return res.json({
+					...project,
+					id: project.id || project._id.toString(),
+				})
+			}
+			return res.status(404).json({ message: 'Not found' })
 		}
 	} catch (error) {
 		console.error('Failed to get from MongoDB, falling back to local JSON:', error.message)
@@ -138,14 +154,25 @@ app.get('/api/projects/:id', async (req, res) => {
 app.put('/api/projects/:id', async (req, res) => {
 	try {
 		if (usingMongo) {
-			const updated = await ProjectModel.findByIdAndUpdate(
-				req.params.id,
+			let updated = await ProjectModel.findOneAndUpdate(
+				{ id: req.params.id },
 				req.body,
 				{ new: true, runValidators: true },
-			)
-			return updated
-				? res.json(updated)
-				: res.status(404).json({ message: 'Not found' })
+			).lean()
+			if (!updated && mongoose.Types.ObjectId.isValid(req.params.id)) {
+				updated = await ProjectModel.findByIdAndUpdate(
+					req.params.id,
+					req.body,
+					{ new: true, runValidators: true },
+				).lean()
+			}
+			if (updated) {
+				return res.json({
+					...updated,
+					id: updated.id || updated._id.toString(),
+				})
+			}
+			return res.status(404).json({ message: 'Not found' })
 		}
 	} catch (error) {
 		console.error('Failed to update in MongoDB, falling back to local JSON:', error.message)
@@ -163,7 +190,10 @@ app.put('/api/projects/:id', async (req, res) => {
 app.delete('/api/projects/:id', async (req, res) => {
 	try {
 		if (usingMongo) {
-			const deleted = await ProjectModel.findByIdAndDelete(req.params.id)
+			let deleted = await ProjectModel.findOneAndDelete({ id: req.params.id })
+			if (!deleted && mongoose.Types.ObjectId.isValid(req.params.id)) {
+				deleted = await ProjectModel.findByIdAndDelete(req.params.id)
+			}
 			return deleted
 				? res.json({ deleted: true })
 				: res.status(404).json({ message: 'Not found' })
