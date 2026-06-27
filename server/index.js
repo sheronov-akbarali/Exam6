@@ -223,7 +223,16 @@ app.get(/.*/, (req, res, next) => {
 })
 
 
-app.listen(PORT, async () => {
-	usingMongo = await connectMongo()
-	console.log(`API server listening on http://localhost:${PORT}`)
+// Connect to MongoDB immediately
+connectMongo().then(connected => {
+	usingMongo = connected
 })
+
+// Only listen if not running as a Vercel serverless function
+if (!process.env.VERCEL) {
+	app.listen(PORT, () => {
+		console.log(`API server listening on http://localhost:${PORT}`)
+	})
+}
+
+export default app
