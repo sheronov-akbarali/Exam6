@@ -1,0 +1,468 @@
+import i18n from 'i18next'
+import { initReactI18next } from 'react-i18next'
+
+const getInitialLanguage = () => {
+	if (typeof window === 'undefined') return 'uz'
+	return window.localStorage.getItem('portfolio-language') || 'uz'
+}
+
+const resources = {
+	uz: {
+		translation: {
+			nav: {
+				home: 'Asosiy',
+				about: 'Haqida',
+				skills: 'Ko‘nikmalar',
+				projects: 'Loyihalar',
+				contact: 'Aloqa',
+				admin: 'Admin',
+			},
+			admin: {
+				panel: 'Admin panel',
+				title: 'Loyihalarni boshqarish',
+				subtitle: 'Loyihalarni qo‘shish, tahrirlash va o‘chirish.',
+				addProject: 'Loyiha qo‘shish',
+				editProject: 'Loyihani tahrirlash',
+				projects: 'Loyihalar',
+				projectCount: 'loyiha',
+				fields: {
+					title: 'Loyiha nomi',
+					description: 'Tavsif',
+					category: 'Kategoriya',
+					tags: 'Teglar (vergul bilan)',
+					github: 'GitHub URL',
+					live: 'Jonli URL',
+					general: 'Umumiy',
+				},
+				create: 'Yaratish',
+				update: 'Yangilash',
+				delete: 'O‘chirish',
+				edit: 'Tahrirlash',
+				cancel: 'Bekor qilish',
+				confirmDelete: 'Bu loyihani o‘chirishni istaysizmi?',
+				created: 'Loyiha yaratildi.',
+				updated: 'Loyiha yangilandi.',
+				deleted: 'Loyiha o‘chirildi.',
+				error: 'Xatolik yuz berdi, qayta urinib ko‘ring.',
+			},
+			common: {
+				hire: 'Bog‘lanish',
+				theme: 'Mavzu',
+				dark: 'Qorong‘i',
+				light: 'Yorug‘',
+				search: 'Qidirish',
+				filter: 'Filter',
+				details: 'Batafsil',
+				addProject: 'Loyiha qo‘shish',
+				loading: 'Yuklanmoqda...',
+			},
+			hero: {
+				badge: 'Ishga tayyor',
+				hello: 'Salom, men',
+				roles: {
+					fullStack: 'Full-Stack Dasturchi',
+					ui: 'UI/UX Muhandisi',
+					react: 'React Mutaxassisi',
+					architect: 'Veb Arxitektor',
+				},
+				description:
+					'Men yuqori tezlikdagi va estetik veb-ilovalarni yarataman.',
+				viewProjects: 'Loyihalarni ko‘rish',
+				getInTouch: 'Bog‘lanish',
+				scroll: 'Pastga',
+				stats: { year: 'Yil', projects: 'Loyihalar', client: 'Mijoz' },
+			},
+			about: {
+				eyebrow: 'Men haqimda',
+				title: 'Men haqimda',
+				intro:
+					'Men 2025-yil oktabrida dasturlashga kirib keldim va shu vaqtdan beri tez o‘rganib bormoqdaman. Men React va Node.js bilan to‘liq-stack ilovalar yarataman, toza kod yozishga intilaman va g‘oyalarni real mahsulotlarga aylantirishni yoqtiraman.',
+				skills: 'Ko‘nikmalar',
+				alsoFamiliar: 'Shuningdek tanish',
+				skillsList: {
+					javascript: 'JavaScript / TypeScript',
+					react: 'React / Next.js',
+					node: 'Node.js',
+					postgres: 'PostgreSQL',
+					python: 'Python',
+					docker: 'Docker / Vercel',
+				},
+				timeline: {
+					freelanceRole: 'Junior Full-Stack Dasturchi',
+					freelanceDesc:
+						'Dasturlash yo‘lini boshladim. 4 ta loyiha yaratdim va 1 ta mijoz bilan ishladim.',
+					selfTaughtRole: 'Veb-dasturlashni o‘rganishni boshladim',
+					selfTaughtDesc:
+						'HTML, CSS, JavaScript bilan boshladim, keyin React va Node.js ga o‘tdim.',
+				},
+			},
+			projects: {
+				eyebrow: 'Men yaratganlar',
+				title: 'Loyihalar',
+				subtitle: 'Tanlangan ishlar va API orqali yuklangan ma’lumotlar.',
+				filters: {
+					all: 'Hammasi',
+					frontend: 'Frontend',
+					fullStack: 'Full Stack',
+					productivity: 'Produktivlik',
+					general: 'Umumiy',
+				},
+				form: {
+					titlePlaceholder: 'Loyiha nomi',
+					categoryPlaceholder: 'Kategoriya',
+					tagsPlaceholder: 'Teglar (vergul bilan)',
+					descriptionPlaceholder: 'Loyiha tavsifi',
+				},
+				error: 'Ayni paytda loyihalarni API dan yuklab bo‘lmadi.',
+				viewAll: 'Barcha loyihalar',
+				card: { favorite: 'Sevimli', live: 'Jonli' },
+			},
+			skills: {
+				title: 'Ko‘nikmalar',
+				subtitle: 'Frontend, backend, API va murakkab loyihalarni boshqarish.',
+			},
+			contact: {
+				eyebrow: 'Keling, gaplashaylik',
+				title: 'Bog‘lanish',
+				subtitle: 'Loyihangiz bo‘yicha gaplashamiz.',
+				details: { email: 'Email', location: 'Manzil', status: 'Holat' },
+				findMe: 'Meni toping',
+				labels: {
+					name: 'Ism',
+					email: 'Email',
+					message: 'Xabar',
+					placeholderName: 'Akbarali Sheronov',
+					placeholderEmail: 'sheronovakbarali@gmail.com',
+					placeholderMessage: 'Loyihangiz haqida yozing...',
+				},
+				buttons: {
+					sending: 'Yuborilmoqda...',
+					sent: '✓ Yuborildi!',
+					error: '✗ Xatolik, qayta urinib ko‘ring',
+					send: 'Xabar yuborish',
+				},
+				status: { openToWork: 'Ishga ochiq' },
+			},
+			footer: { backToTop: 'Yuqoriga qaytish' },
+			projectDetails: {
+				back: '← Loyihalarga qaytish',
+				loading: 'Loyiha tafsilotlari yuklanmoqda...',
+				error: 'Hozirda loyihani yuklab bo‘lmadi.',
+				heading: 'Loyiha tafsilotlari',
+				featured: 'Tanlangan',
+				liveDemo: 'Jonli ko‘rinish',
+			},
+		},
+	},
+	en: {
+		translation: {
+			nav: {
+				home: 'Home',
+				about: 'About',
+				skills: 'Skills',
+				projects: 'Projects',
+				contact: 'Contact',
+			admin: 'Admin',
+			},
+			admin: {
+				panel: 'Admin panel',
+				title: 'Project management',
+				subtitle: 'Create, update, and delete projects from one place.',
+				addProject: 'Add project',
+				editProject: 'Edit project',
+				projects: 'Projects',
+				projectCount: 'projects',
+				fields: {
+					title: 'Project title',
+					description: 'Description',
+					category: 'Category',
+					tags: 'Tags (comma separated)',
+					github: 'GitHub URL',
+					live: 'Live URL',
+					general: 'General',
+				},
+				create: 'Create',
+				update: 'Update',
+				delete: 'Delete',
+				edit: 'Edit',
+				cancel: 'Cancel',
+				confirmDelete: 'Are you sure you want to delete this project?',
+				created: 'Project created.',
+				updated: 'Project updated.',
+				deleted: 'Project deleted.',
+				error: 'Something went wrong, please try again.',
+			},
+			common: {
+				hire: 'Hire me',
+				theme: 'Theme',
+				dark: 'Dark',
+				light: 'Light',
+				search: 'Search',
+				filter: 'Filter',
+				details: 'Details',
+				addProject: 'Add project',
+				loading: 'Loading...',
+			},
+			hero: {
+				badge: 'Available for work',
+				hello: "Hello, I'm",
+				roles: {
+					fullStack: 'Full-Stack Developer',
+					ui: 'UI/UX Engineer',
+					react: 'React Specialist',
+					architect: 'Web Architect',
+				},
+				description:
+					'I craft high-performance web experiences with clean code and thoughtful design.',
+				viewProjects: 'View Projects',
+				getInTouch: 'Get in Touch',
+				scroll: 'Scroll',
+				stats: { year: 'Year', projects: 'Projects', client: 'Client' },
+			},
+			about: {
+				eyebrow: 'Who I am',
+				title: 'About Me',
+				intro:
+					'I started my developer journey in October 2025 and have been learning fast ever since. I build full-stack web apps with React and Node.js, focus on clean code, and enjoy turning ideas into real working products.',
+				skills: 'Skills',
+				alsoFamiliar: 'Also familiar with',
+				skillsList: {
+					javascript: 'JavaScript / TypeScript',
+					react: 'React / Next.js',
+					node: 'Node.js',
+					postgres: 'PostgreSQL',
+					python: 'Python',
+					docker: 'Docker / Vercel',
+				},
+				timeline: {
+					freelanceRole: 'Junior Full-Stack Developer',
+					freelanceDesc:
+						'Started my developer journey. Built 4 projects and worked with 1 client.',
+					selfTaughtRole: 'Started Learning Web Dev',
+					selfTaughtDesc:
+						'Began with HTML, CSS, JavaScript, then moved to React and Node.js.',
+				},
+			},
+			projects: {
+				eyebrow: "What I've built",
+				title: 'Projects',
+				subtitle: 'Selected work and API-driven project data.',
+				filters: {
+					all: 'All',
+					frontend: 'Frontend',
+					fullStack: 'Full Stack',
+					productivity: 'Productivity',
+					general: 'General',
+				},
+				form: {
+					titlePlaceholder: 'Project title',
+					categoryPlaceholder: 'Category',
+					tagsPlaceholder: 'Tags (comma separated)',
+					descriptionPlaceholder: 'Project description',
+				},
+				error: 'Unable to load projects from the API right now.',
+				viewAll: 'All projects',
+				card: { favorite: 'Favorite', live: 'Live' },
+			},
+			skills: {
+				title: 'Skills',
+				subtitle: 'Frontend, backend, APIs, and product delivery.',
+			},
+			contact: {
+				eyebrow: "Let's talk",
+				title: 'Get in Touch',
+				subtitle:
+					'Have a project in mind or want to discuss an opportunity? I am always open to interesting conversations and collaborations.',
+				details: { email: 'Email', location: 'Location', status: 'Status' },
+				findMe: 'Find me on',
+				labels: {
+					name: 'Name',
+					email: 'Email',
+					message: 'Message',
+					placeholderName: 'Akbarali Sheronov',
+					placeholderEmail: 'sheronovakbarali@gmail.com',
+					placeholderMessage: 'Tell me about your project...',
+				},
+				buttons: {
+					sending: 'Sending...',
+					sent: '✓ Sent!',
+					error: '✗ Error, try again',
+					send: 'Send Message',
+				},
+				status: { openToWork: 'Open to work' },
+			},
+			footer: { backToTop: 'Back to top' },
+			projectDetails: {
+				back: '← Back to projects',
+				loading: 'Loading project details...',
+				error: 'Unable to load the project right now.',
+				heading: 'Project details',
+				featured: 'Featured',
+				liveDemo: 'Live Demo',
+			},
+		},
+	},
+	ru: {
+		translation: {
+			nav: {
+				home: 'Главная',
+				about: 'Обо мне',
+				skills: 'Навыки',
+				projects: 'Проекты',
+				contact: 'Контакты',
+			admin: 'Админ',
+			},
+			admin: {
+				panel: 'Панель администратора',
+				title: 'Управление проектами',
+				subtitle: 'Создавайте, редактируйте и удаляйте проекты в одном месте.',
+				addProject: 'Добавить проект',
+				editProject: 'Редактировать проект',
+				projects: 'Проекты',
+				projectCount: 'проектов',
+				fields: {
+					title: 'Название проекта',
+					description: 'Описание',
+					category: 'Категория',
+					tags: 'Теги (через запятую)',
+					github: 'GitHub URL',
+					live: 'Live URL',
+					general: 'Общее',
+				},
+				create: 'Создать',
+				update: 'Обновить',
+				delete: 'Удалить',
+				edit: 'Редактировать',
+				cancel: 'Отмена',
+				confirmDelete: 'Вы уверены, что хотите удалить этот проект?',
+				created: 'Проект создан.',
+				updated: 'Проект обновлён.',
+				deleted: 'Проект удалён.',
+				error: 'Произошла ошибка, попробуйте снова.',
+			},
+			common: {
+				hire: 'Связаться',
+				theme: 'Тема',
+				dark: 'Тёмная',
+				light: 'Светлая',
+				search: 'Поиск',
+				filter: 'Фильтр',
+				details: 'Подробнее',
+				addProject: 'Добавить проект',
+				loading: 'Загрузка...',
+			},
+			hero: {
+				badge: 'Готов к работе',
+				hello: 'Привет, я',
+				roles: {
+					fullStack: 'Full-Stack разработчик',
+					ui: 'UI/UX инженер',
+					react: 'React специалист',
+					architect: 'Веб-архитектор',
+				},
+				description:
+					'Создаю быстрые и продуманные веб-решения с чистым кодом и аккуратным дизайном.',
+				viewProjects: 'Посмотреть проекты',
+				getInTouch: 'Связаться',
+				scroll: 'Прокрутить',
+				stats: { year: 'Год', projects: 'Проекты', client: 'Клиент' },
+			},
+			about: {
+				eyebrow: 'Кто я',
+				title: 'Обо мне',
+				intro:
+					'Я начал свой путь разработчика в октябре 2025 года и с тех пор быстро учусь. Я создаю full-stack веб-приложения на React и Node.js, пишу чистый код и люблю превращать идеи в реальные продукты.',
+				skills: 'Навыки',
+				alsoFamiliar: 'Также знаком',
+				skillsList: {
+					javascript: 'JavaScript / TypeScript',
+					react: 'React / Next.js',
+					node: 'Node.js',
+					postgres: 'PostgreSQL',
+					python: 'Python',
+					docker: 'Docker / Vercel',
+				},
+				timeline: {
+					freelanceRole: 'Junior Full-Stack разработчик',
+					freelanceDesc:
+						'Начал путь разработчика. Создал 4 проекта и поработал с 1 клиентом.',
+					selfTaughtRole: 'Начал изучать веб-разработку',
+					selfTaughtDesc:
+						'Начал с HTML, CSS, JavaScript, затем перешёл на React и Node.js.',
+				},
+			},
+			projects: {
+				eyebrow: 'Что я сделал',
+				title: 'Проекты',
+				subtitle: 'Избранные работы и данные из API.',
+				filters: {
+					all: 'Все',
+					frontend: 'Frontend',
+					fullStack: 'Full Stack',
+					productivity: 'Продуктивность',
+					general: 'Общее',
+				},
+				form: {
+					titlePlaceholder: 'Название проекта',
+					categoryPlaceholder: 'Категория',
+					tagsPlaceholder: 'Теги (через запятую)',
+					descriptionPlaceholder: 'Описание проекта',
+				},
+				error: 'Не удалось загрузить проекты из API прямо сейчас.',
+				viewAll: 'Все проекты',
+				card: { favorite: 'Избранное', live: 'Демо' },
+			},
+			skills: {
+				title: 'Навыки',
+				subtitle: 'Фронтенд, бэкенд, API и доставка продуктов.',
+			},
+			contact: {
+				eyebrow: 'Давайте поговорим',
+				title: 'Связаться',
+				subtitle:
+					'Есть идея или проект? Я всегда открыт для обсуждений и сотрудничества.',
+				details: { email: 'Email', location: 'Локация', status: 'Статус' },
+				findMe: 'Найдите меня',
+				labels: {
+					name: 'Имя',
+					email: 'Email',
+					message: 'Сообщение',
+					placeholderName: 'Акбарали Шеронов',
+					placeholderEmail: 'sheronovakbarali@gmail.com',
+					placeholderMessage: 'Расскажите о вашем проекте...',
+				},
+				buttons: {
+					sending: 'Отправка...',
+					sent: '✓ Отправлено!',
+					error: '✗ Ошибка, попробуйте ещё раз',
+					send: 'Отправить сообщение',
+				},
+				status: { openToWork: 'Открыт к работе' },
+			},
+			footer: { backToTop: 'Наверх' },
+			projectDetails: {
+				back: '← Назад к проектам',
+				loading: 'Загрузка деталей проекта...',
+				error: 'Не удалось загрузить проект прямо сейчас.',
+				heading: 'Детали проекта',
+				featured: 'Рекомендуемый',
+				liveDemo: 'Демо',
+			},
+		},
+	},
+}
+
+i18n.use(initReactI18next).init({
+	resources,
+	lng: getInitialLanguage(),
+	fallbackLng: 'uz',
+	interpolation: { escapeValue: false },
+})
+
+export const syncLanguage = language => {
+	if (language && resources[language]) {
+		i18n.changeLanguage(language)
+	}
+}
+
+export default i18n

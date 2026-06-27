@@ -1,0 +1,29 @@
+[
+	{
+		"id": "1",
+		"title": "Avto Test Plus",
+		"description": "Online platform for practicing Uzbekistan driving theory tests. Real questions, timer, and result tracking.",
+		"tags": ["React", "Vercel", "JavaScript", "Tailwind"],
+		"category": "Frontend",
+		"github": "https://github.com/sheronov-akbarali/avto-testplus01",
+		"live": "https://avto-testplus.vercel.app/"
+	},
+	{
+		"id": "2",
+		"title": "E-Commerce App",
+		"description": "A modern online store with product browsing, cart management and an API-driven catalog.",
+		"tags": ["Next.js", "Node.js", "MongoDB", "Stripe"],
+		"category": "Full Stack",
+		"github": "https://github.com/sheronov-akbarali/E-Commerce-App",
+		"live": "https://e-commerce-app-eta-rosy.vercel.app/"
+	},
+	{
+		"id": "3",
+		"title": "Task Manager",
+		"description": "A productivity board inspired by Trello with drag-and-drop interactions and API persistence.",
+		"tags": ["React", "Express", "PostgreSQL", "Socket.io"],
+		"category": "Productivity",
+		"github": "https://github.com/sheronov-akbarali/task-manager",
+		"live": "https://task-manager-phi-one-26.vercel.app/"
+	}
+]

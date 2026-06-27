@@ -1,36 +1,55 @@
-import { Suspense, lazy } from 'react'
-import Navbar from './components/Navbar'
-import Hero from './components/Hero'
+import { useEffect } from 'react'
+import { useSelector } from 'react-redux'
+import { BrowserRouter, Route, Routes } from 'react-router-dom'
+import ScrollToTop from './components/ScrollToTop'
+import { syncLanguage } from './i18n/i18n'
+import AdminPage from './pages/AdminPage'
+import HomePage from './pages/HomePage'
+import NotFoundPage from './pages/NotFoundPage'
+import ProjectDetailsPage from './pages/ProjectDetailsPage'
+import ProjectsPage from './pages/ProjectsPage'
+import SkillsPage from './pages/SkillsPage'
 
-// Lazy load below-the-fold sections for better initial load
-const About = lazy(() => import('./components/About'))
-const Projects = lazy(() => import('./components/Projects'))
-const Contact = lazy(() => import('./components/Contact'))
-const Footer = lazy(() => import('./components/Footer'))
+function AppRoutes() {
+	const theme = useSelector(state => state.theme)
+	const language = useSelector(state => state.language)
 
-function SectionFallback() {
-  return (
-    <div className="flex items-center justify-center py-32">
-      <div className="w-6 h-6 rounded-full border-2 border-indigo-500/30 border-t-indigo-500 animate-spin" />
-    </div>
-  )
+	useEffect(() => {
+		document.body.dataset.theme = theme
+		document.documentElement.style.colorScheme = theme
+	}, [theme])
+
+	useEffect(() => {
+		syncLanguage(language)
+	}, [language])
+
+	return (
+		<div
+			className={
+				theme === 'dark'
+					? 'min-h-screen bg-page text-white'
+					: 'min-h-screen bg-page text-[#111111]'
+			}
+		>
+			<ScrollToTop />
+			<Routes>
+				<Route path='/' element={<HomePage />} />
+				<Route path='/about' element={<HomePage />} />
+				<Route path='/skills' element={<SkillsPage />} />
+				<Route path='/projects' element={<ProjectsPage />} />
+				<Route path='/projects/:id' element={<ProjectDetailsPage />} />
+				<Route path='/contact' element={<HomePage />} />
+				<Route path='/admin' element={<AdminPage />} />
+				<Route path='*' element={<NotFoundPage />} />
+			</Routes>
+		</div>
+	)
 }
 
 export default function App() {
-  return (
-    <div className="relative bg-[#080810] min-h-screen">
-      <Navbar />
-      <main>
-        <Hero />
-        <Suspense fallback={<SectionFallback />}>
-          <About />
-          <Projects />
-          <Contact />
-        </Suspense>
-      </main>
-      <Suspense fallback={null}>
-        <Footer />
-      </Suspense>
-    </div>
-  )
+	return (
+		<BrowserRouter>
+			<AppRoutes />
+		</BrowserRouter>
+	)
 }

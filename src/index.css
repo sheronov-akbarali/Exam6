@@ -1,53 +1,233 @@
-@import "tailwindcss";
+@import 'tailwindcss';
 
 @theme {
-  --color-accent: #f0f0f0;
-  --color-base:   #0c0c0c;
-  --color-muted:  #3a3a3a;
-  --color-dim:    #1a1a1a;
+	--color-page: #080810;
+	--color-dim: #0c0c0c;
+	--color-card: #111111;
+	--color-accent: #f0f0f0;
+	--color-muted: #3a3a3a;
 }
 
 @layer base {
-  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+	*,
+	*::before,
+	*::after {
+		box-sizing: border-box;
+		margin: 0;
+		padding: 0;
+	}
 
-  html { scroll-behavior: smooth; }
+	html {
+		scroll-behavior: smooth;
+	}
 
-  body {
-    background: #0c0c0c;
-    color: #f0f0f0;
-    font-family: 'Inter', 'Segoe UI', system-ui, sans-serif;
-    overflow-x: hidden;
-    -webkit-font-smoothing: antialiased;
-  }
+	body {
+		background: #080810;
+		color: #f0f0f0;
+		font-family: 'Inter', 'Segoe UI', system-ui, sans-serif;
+		overflow-x: hidden;
+		-webkit-font-smoothing: antialiased;
+	}
 
-  ::-webkit-scrollbar { width: 3px; }
-  ::-webkit-scrollbar-track { background: #0c0c0c; }
-  ::-webkit-scrollbar-thumb { background: #2a2a2a; }
+	body[data-theme='light'] {
+		background: #ffffff;
+		color: #111111;
+		--color-page: #ffffff;
+		--color-dim: #f7f7f7;
+		--color-card: #ffffff;
+		--color-accent: #111111;
+		--color-muted: #8e8e93;
+	}
 
-  ::selection { background: rgba(240,240,240,0.15); color: #fff; }
+	/* Force dark background/text for accent buttons in light mode */
+	body[data-theme='light'] .bg-accent {
+		background-color: #111111 !important;
+		color: #ffffff !important;
+	}
+	body[data-theme='light'] .bg-accent:hover {
+		background-color: rgba(17, 17, 17, 0.9) !important;
+	}
+
+	/* Map high-contrast dark-mode white buttons (bg-white text-black) to premium black buttons in light mode */
+	body[data-theme='light'] .bg-white.text-black {
+		background-color: #111111 !important;
+		color: #ffffff !important;
+	}
+
+	/* Map white backgrounds to elegant dark/semi-transparent dark in light mode */
+	body[data-theme='light'] .bg-white\/60 {
+		background-color: rgba(17, 17, 17, 0.6) !important;
+	}
+	body[data-theme='light'] .bg-white\/40 {
+		background-color: rgba(17, 17, 17, 0.4) !important;
+	}
+	body[data-theme='light'] .bg-white\/15 {
+		background-color: rgba(17, 17, 17, 0.15) !important;
+	}
+	body[data-theme='light'] .bg-white\/10 {
+		background-color: rgba(17, 17, 17, 0.1) !important;
+	}
+	body[data-theme='light'] .bg-white\/\[0\.05\],
+	body[data-theme='light'] .bg-white\/\[0\.07\] {
+		background-color: rgba(17, 17, 17, 0.07) !important;
+	}
+
+	/* Map border-white variants to proportional dark borders in light mode */
+	body[data-theme='light'] [class*='border-white'] {
+		border-color: rgba(17, 17, 17, 0.08) !important;
+	}
+	body[data-theme='light'] .border-white\/10 {
+		border-color: rgba(17, 17, 17, 0.12) !important;
+	}
+	body[data-theme='light'] .border-white\/15 {
+		border-color: rgba(17, 17, 17, 0.18) !important;
+	}
+	body[data-theme='light'] .border-white\/20 {
+		border-color: rgba(17, 17, 17, 0.25) !important;
+	}
+	body[data-theme='light'] .border-white\/40 {
+		border-color: rgba(17, 17, 17, 0.45) !important;
+	}
+	body[data-theme='light'] .border-white\/\[0\.05\] {
+		border-color: rgba(17, 17, 17, 0.06) !important;
+	}
+	body[data-theme='light'] .border-white\/\[0\.06\] {
+		border-color: rgba(17, 17, 17, 0.07) !important;
+	}
+	body[data-theme='light'] .border-white\/\[0\.07\] {
+		border-color: rgba(17, 17, 17, 0.08) !important;
+	}
+	body[data-theme='light'] .border-white\/\[0\.08\] {
+		border-color: rgba(17, 17, 17, 0.09) !important;
+	}
+
+	/* Map text-white opacities to preserve visual hierarchy in light mode */
+	body[data-theme='light'] [class*='text-white'] {
+		color: rgba(17, 17, 17, 0.95) !important;
+	}
+	body[data-theme='light'] .text-white {
+		color: #111111 !important;
+	}
+	body[data-theme='light'] .text-white\/80 {
+		color: rgba(17, 17, 17, 0.8) !important;
+	}
+	body[data-theme='light'] .text-white\/70 {
+		color: rgba(17, 17, 17, 0.7) !important;
+	}
+	body[data-theme='light'] .text-white\/60 {
+		color: rgba(17, 17, 17, 0.6) !important;
+	}
+	body[data-theme='light'] .text-white\/50 {
+		color: rgba(17, 17, 17, 0.5) !important;
+	}
+	body[data-theme='light'] .text-white\/40 {
+		color: rgba(17, 17, 17, 0.4) !important;
+	}
+	body[data-theme='light'] .text-white\/35 {
+		color: rgba(17, 17, 17, 0.35) !important;
+	}
+	body[data-theme='light'] .text-white\/25 {
+		color: rgba(17, 17, 17, 0.25) !important;
+	}
+	body[data-theme='light'] .text-white\/20 {
+		color: rgba(17, 17, 17, 0.2) !important;
+	}
+	body[data-theme='light'] .text-white\/15 {
+		color: rgba(17, 17, 17, 0.15) !important;
+	}
+
+	/* Map focused input states and placeholders to dark text in light mode */
+	body[data-theme='light'] .focus\:text-white:focus {
+		color: #111111 !important;
+	}
+	body[data-theme='light'] ::placeholder,
+	body[data-theme='light'] [class*='placeholder-white']::placeholder {
+		color: rgba(17, 17, 17, 0.4) !important;
+	}
+
+	/* Map select dropdown option background */
+	body[data-theme='light'] option {
+		background-color: #f3f3f3 !important;
+		color: #111111 !important;
+	}
+
+	/* Dynamic ProjectCard thumbnail gradient in light mode */
+	body[data-theme='light'] .project-card-thumb {
+		background: linear-gradient(135deg, #eaeaea 0%, #dfdfdf 100%) !important;
+	}
+
+	::-webkit-scrollbar {
+		width: 3px;
+	}
+	::-webkit-scrollbar-track {
+		background: #0c0c0c;
+	}
+	::-webkit-scrollbar-thumb {
+		background: #2a2a2a;
+	}
+
+	::selection {
+		background: rgba(240, 240, 240, 0.15);
+		color: #fff;
+	}
+
+	body[data-theme='light'] ::selection {
+		background: rgba(17, 17, 17, 0.08);
+		color: #111111;
+	}
+
+	body[data-theme='light'] ::-webkit-scrollbar-track {
+		background: #f3f3f3;
+	}
+
+	body[data-theme='light'] ::-webkit-scrollbar-thumb {
+		background: #cfcfcf;
+	}
+
+	/* Nav link hover effects in light mode */
+	body[data-theme='light'] .link-line {
+		color: rgba(17, 17, 17, 0.4) !important;
+	}
+	body[data-theme='light'] .link-line:hover {
+		color: #111111 !important;
+	}
+	body[data-theme='light'] .link-line::after {
+		background: #111111 !important;
+	}
+
+	/* Hero rule lines and scroll indicators in light mode */
+	body[data-theme='light'] .hero-rule-line-1 {
+		background: linear-gradient(90deg, transparent, rgba(17, 17, 17, 0.05) 20%, rgba(17, 17, 17, 0.05) 80%, transparent) !important;
+	}
+	body[data-theme='light'] .hero-rule-line-2 {
+		background: linear-gradient(90deg, transparent, rgba(17, 17, 17, 0.04) 20%, rgba(17, 17, 17, 0.04) 80%, transparent) !important;
+	}
+	body[data-theme='light'] .hero-scroll-line {
+		background: linear-gradient(to bottom, rgba(17, 17, 17, 0.2), transparent) !important;
+	}
 }
 
 @layer utilities {
-  .text-accent   { color: #f0f0f0; }
-  .bg-accent     { background-color: #f0f0f0; }
-  .border-accent { border-color: #f0f0f0; }
-  .bg-base       { background-color: #0c0c0c; }
-  .bg-dim        { background-color: #141414; }
-
-  /* Subtle underline link */
-  .link-line {
-    position: relative;
-    color: rgba(240,240,240,0.4);
-    transition: color 0.2s;
-  }
-  .link-line::after {
-    content: '';
-    position: absolute;
-    bottom: -2px; left: 0;
-    width: 0; height: 1px;
-    background: #f0f0f0;
-    transition: width 0.3s ease;
-  }
-  .link-line:hover { color: #f0f0f0; }
-  .link-line:hover::after { width: 100%; }
+	/* Subtle underline link */
+	.link-line {
+		position: relative;
+		color: rgba(240, 240, 240, 0.4);
+		transition: color 0.2s;
+	}
+	.link-line::after {
+		content: '';
+		position: absolute;
+		bottom: -2px;
+		left: 0;
+		width: 0;
+		height: 1px;
+		background: #f0f0f0;
+		transition: width 0.3s ease;
+	}
+	.link-line:hover {
+		color: #f0f0f0;
+	}
+	.link-line:hover::after {
+		width: 100%;
+	}
 }
